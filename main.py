@@ -1,7 +1,7 @@
 import time
 from shutil import copyfile
 from sys import argv as argv
-from subprocess import run as os_run
+from subprocess import run
 
 from keyboard import is_pressed
 from watchdog.events import FileSystemEvent, FileSystemEventHandler, FileModifiedEvent
@@ -19,19 +19,19 @@ class MyEventHandler(FileSystemEventHandler):
                 print("Copying started")
                 print("     src_path: " + event.src_path)
                 print("     copy dir: " + COPY_TO_DIR)
-                print("     pdf dir: " + PDF_DIR)
                 print("     target_dir: " + TARGET_DIR)
                 print("     file name: " + target_file)
                 print("~~~~~~~~~~~~~~~")
                 copyfile(event.src_path, COPY_TO_DIR + target_file)
 
-            #if PDF_DIR in event.src_path:  # TODO : returnt o make this work
-            #    print("~~~~~~~~~~~~~~~")
-            #    print("Opening PDF started")
-            #    print("     pdf dir: " + PDF_DIR)
-            #    print("     file name: " + target_file)
-            #    print("~~~~~~~~~~~~~~~")
-            #    os_run(["acrobat.exe ", PDF_DIR + target_file]) # make sure this runs the most recent pdf
+            if PDF_DIR in event.src_path:  # TODO : returnt o make this work
+                if ".pdf" in target_file:
+                    print("~~~~~~~~~~~~~~~")
+                    print("Opening PDF started")
+                    print("     pdf dir: " + PDF_DIR)
+                    print("     file name: " + target_file)
+                    print("~~~~~~~~~~~~~~~")
+                    run(["Acrobat", target_file]) # make sure this runs the most recent pdf
 
 # ~~~~~~~~~~~~~~~~~~~~ END CLASS MyEventHandler
 if not len(argv) in [3, 4, 5]: # TODO : Change s.t. there are only two options (remove 3).  only optional one is specifying the sleep time
