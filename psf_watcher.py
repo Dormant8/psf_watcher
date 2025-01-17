@@ -2,7 +2,7 @@ import time
 from shutil import copyfile
 from sys import argv as argv
 from subprocess import run
-from os import path.abspath as abspath
+from os.path import abspath as abspath
 
 from keyboard import is_pressed
 from watchdog.events import FileSystemEventHandler, FileModifiedEvent
@@ -22,11 +22,13 @@ class MyEventHandler(FileSystemEventHandler):
                 print("     target_dir:  " + TARGET_DIR)
                 print("     file name:   " + target_file)
 
-            if PDF_DIR in event.src_path:
-                if ".pdf" in target_file:
-                    #run(["Acrobat", target_file]) # TODO : swap comments
+            if PDF_DIR in event.src_path and ".pdf" in event.src_path:
+                    #run(["Acrobat", event.src_path]) # TODO : swap comments
+                    #run(["Acrobat", target_file]) 
                     print("Opening PDF started")
-                    print("     file name: " + target_file)
+                    print("     file name: " + event.src_path)
+                    print("     dupe check name: " + target_file)
+
 
 # ~~~~~~~~~~~~~~~~~~~~ END CLASS MyEventHandler
 # ~~~~~~~~~~~~~~~~~~~~ Script
@@ -34,36 +36,58 @@ if not len(argv) in [2, 3]:
     print("Wrong number of args")
     exit()
 
-
+# watchdog objects
 event_handler = MyEventHandler()
 observer = Observer()
 
-print("Running:             " + argv[0])
-print("Working psfs:        " + argv[1])
-print("Distiller Directory: " + argv[2])
 
-ABS_PATH = abspath(__file__) # gets path to script
-TARGET_DIR = argv[1]
-COPY_TO_DIR = argv[2] + "\\in"
-PDF_DIR = argv[2] + "\\out"
+ABS_PATH = abspath(__file__).removesuffix(argv[0]) # gets path to script
+print(ABS_PATH)
+TARGET_DIR = str(argv[1])
+DISTILLER_DIR = str(argv[2])
 
 sleep_seconds = 1
-if len(argv) == 3 and argv[3].isnumeric():
-    sleep_seconds = int(argv[3])
+if len(argv) == 3 and argv[2].isnumeric():
+    sleep_seconds = float(argv[2])
 
-for dir in [TARGET_DIR, COPY_TO_DIR, PDF_DIR]:
+paths = [TARGET_DIR, DISTILLER_DIR]
+
+
+
+# TODO : need this for side effect.. python
+#for index, item in enumerate(paths):
+    #if item.startswith(".\\"):
+    #paths[index] = item.strip()
+
+for dir in paths, :
     if dir.startswith(".\\"):
-        dir = ABS_PATH + dir[1:]
+        dir = dir[1:]
+    if dir.endswith("\\"):
+        dir = dir[:1]
+    dir = ABS_PATH + dir
+
+COPY_TO_DIR = DISTILLER_DIR + "in"
+PDF_DIR = DISTILLER_DIR + "out"
+
+for dir in [TARGET_DIR, DISTILLER_DIR, COPY_TO_DIR, PDF_DIR]:
+    print("Scheduling " + dir)
     observer.schedule(event_handler, dir)
+
+
+print("Starting:            " + argv[0])
+print("Working psfs:        " + TARGET_DIR)
+print("Distiller Directory: " + DISTILLER_DIR)
+print()
+print("Hold 'q' to quit")
 
 observer.start()
 
-print("Hold 'q' to quit")
 #The reason you have to hold is that this check only happens once per sleep cycle
 #not a good choice with sleep call
 try:
     while not is_pressed('q'): 
-        time.sleep(int(seconds_sleep))
+        #observer checks here
+        time.sleep(sleep_seconds)
 finally:
     observer.stop()
     observer.join()
