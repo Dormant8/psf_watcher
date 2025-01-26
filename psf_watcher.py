@@ -4,7 +4,6 @@ from sys import argv as argv
 from subprocess import run
 from os.path import abspath as abspath
 
-from keyboard import is_pressed
 from watchdog.events import FileSystemEventHandler, FileModifiedEvent
 from watchdog.observers import Observer
 
@@ -78,16 +77,19 @@ print("Starting:            " + argv[0])
 print("Working psfs:        " + TARGET_DIR)
 print("Distiller Directory: " + DISTILLER_DIR)
 print()
-print("Hold 'q' to quit")
+print('Press "Ctr+C" to exit')
 
 observer.start()
 
 #The reason you have to hold is that this check only happens once per sleep cycle
 #not a good choice with sleep call
 try:
-    while not is_pressed('q'): 
+    while True: 
         #observer checks here
         time.sleep(sleep_seconds)
+except KeyboardInterrupt:
+    pass
 finally:
+    print("Exiting program")
     observer.stop()
     observer.join()
