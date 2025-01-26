@@ -51,24 +51,20 @@ if len(argv) == 3 and argv[2].isnumeric():
 
 paths = [TARGET_DIR, DISTILLER_DIR]
 
+for idx, path in enumerate(paths):
+    if path.startswith(".\\") or path.startswith("./"):
+        path = path[2:]
+    if path.endswith("\\") or path.endswith("/"):
+        path = path[:-1]
+    paths[idx] = ABS_PATH + path
 
+TARGET_DIR = paths[0]
+DISTILLER_DIR = paths[1]
 
-# TODO : need this for side effect.. python
-#for index, item in enumerate(paths):
-    #if item.startswith(".\\"):
-    #paths[index] = item.strip()
+COPY_TO_DIR = DISTILLER_DIR + "\\in"
+PDF_DIR = DISTILLER_DIR + "\\out"
 
-for dir in paths, :
-    if dir.startswith(".\\"):
-        dir = dir[1:]
-    if dir.endswith("\\"):
-        dir = dir[:1]
-    dir = ABS_PATH + dir
-
-COPY_TO_DIR = DISTILLER_DIR + "in"
-PDF_DIR = DISTILLER_DIR + "out"
-
-for dir in [TARGET_DIR, DISTILLER_DIR, COPY_TO_DIR, PDF_DIR]:
+for dir in [TARGET_DIR, COPY_TO_DIR, PDF_DIR]:
     print("Scheduling " + dir)
     observer.schedule(event_handler, dir)
 

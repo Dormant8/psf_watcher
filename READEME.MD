@@ -1,6 +1,3 @@
-
-out of order 
-
 # Usage
 $py psf_watcher.py <Working/psf directory> <Distiller Directory> [<seconds sleep=1>]
 Example : py psf_watcher.py .\SVN_ps\8x\mck .\watched_ps 2
@@ -16,7 +13,6 @@ script must be ran higher in the directory heirarchy than both your working and 
 Acrobat's executable must be on your path env var
 Distiller's folders must be default names "in" and "out"
 python packages:
-  pip install keyboard
   pip install watchdog
 
 # Other docs
@@ -28,9 +24,4 @@ https://python-watchdog.readthedocs.io/en/stable/api.html#module-watchdog.observ
 consider a way to take absolute paths as well, or set up simple gui ( yuk )
 
 # TODO 
-confirm argument changes work
-confirm pathing logic works
-confirm scheduler changes work
-remove keyboard lib
-
-
+clean up how paths are assigned... ( @ paths list... ) 
