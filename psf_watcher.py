@@ -15,18 +15,14 @@ class MyEventHandler(FileSystemEventHandler):
             target_file = target_file.replace(TARGET_DIR, '')
             if TARGET_DIR in event.src_path:
                 copyfile(event.src_path, COPY_TO_DIR + target_file)
-                print("Copy complete") # TODO : comment
-                print("     src_path:    " + event.src_path)
-                print("     copy to dir: " + COPY_TO_DIR)
-                print("     target_dir:  " + TARGET_DIR)
+                print("Copied file")
                 print("     file name:   " + target_file)
+                print("     target_dir:  " + TARGET_DIR)
 
             if PDF_DIR in event.src_path and ".pdf" in event.src_path:
-                    #run(["Acrobat", event.src_path]) # TODO : swap comments
-                    #run(["Acrobat", target_file]) 
+                    run(["Acrobat", event.src_path]) 
                     print("Opening PDF started")
                     print("     file name: " + event.src_path)
-                    print("     dupe check name: " + target_file)
 
 
 # ~~~~~~~~~~~~~~~~~~~~ END CLASS MyEventHandler
@@ -41,7 +37,6 @@ observer = Observer()
 
 
 ABS_PATH = abspath(__file__).removesuffix(argv[0]) # gets path to script
-print(ABS_PATH)
 TARGET_DIR = str(argv[1])
 DISTILLER_DIR = str(argv[2])
 
@@ -65,7 +60,6 @@ COPY_TO_DIR = DISTILLER_DIR + "\\in"
 PDF_DIR = DISTILLER_DIR + "\\out"
 
 for dir in [TARGET_DIR, COPY_TO_DIR, PDF_DIR]:
-    print("Scheduling " + dir)
     observer.schedule(event_handler, dir)
 
 

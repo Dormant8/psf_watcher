@@ -22,6 +22,6 @@ https://python-watchdog.readthedocs.io/en/stable/api.html#module-watchdog.observ
 
 # Consider
 consider a way to take absolute paths as well, or set up simple gui ( yuk )
+clean up how paths are assigned... ( @ paths list... ) 
 
 # TODO 
-clean up how paths are assigned... ( @ paths list... ) 
